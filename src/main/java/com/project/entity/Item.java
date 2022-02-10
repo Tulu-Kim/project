@@ -3,6 +3,7 @@ package com.project.entity;
 
 import com.project.constant.ItemSellStatus;
 import com.project.dto.ItemFormDto;
+import com.project.exception.OutOfStockException;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -46,6 +47,17 @@ public class Item extends BaseEntity {
         this.itemSellStatus = itemFormDto.getItemSellStatus();
     }
 
-}
+    public void removeStock(int stockNumber){
+        int restStrock = this.stockNumber - stockNumber; //상품의 재고 수량에서 주문 후 남은 재고 수량을 구한다.
+        if(restStrock<0) {
+            throw new OutOfStockException("상품의 재고가 부족 합니다.(현재 재고 수량: "
+                    + this.stockNumber + ")"); //상품의 재고가 주문 수량보다 작을 경우 재고 부족 예외를 발생.
+        }
+        this.stockNumber = restStrock; //주문 후 남은 재고 수량을 상품의 현재 재고 값으로 할당.
+    }
+
+ }
+
+
 
 
